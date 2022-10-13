@@ -60,10 +60,11 @@ app.command('/openai-dalle2', async ({ command, ack, payload, context, respond, 
             user    : payload.user_id,
             text    : `:rocket: Sending this prompt to DALL-E2:\n> _${prompt}_`
         });
+        console.log(`\n sending prompt "${prompt}" to openai via dalle2 api`);
         const res = await axios.post('https://api.openai.com/v1/images/generations', {
             model           : "image-alpha-001",
             caption         : prompt,
-            num_images      : 1, // TODO - support full range of options [up to 10]
+            num_images      : 4, // TODO - support full range of options [up to 10]
             size            : "256x256", // TODO - support full range of sizes [64x64, 256x256 or 1024x1024]
             response_format : "url" // TODO - support both options [or b64_json]
         }, {
@@ -73,7 +74,21 @@ app.command('/openai-dalle2', async ({ command, ack, payload, context, respond, 
             }
         });
         console.log('\n[openai-dalle2] OpenAI DALL-E2 API response url:');
-        const generation = res.data.data[0].url; // TODO - add logic to support more than 1 url
+        console.log('res.data.data');
+        console.log(res.data.data);
+        const generation1 = res.data.data[0].url; // TODO - add logic to support more than 1 url
+        const generation2 = res.data.data[1].url; // TODO - add logic to support more than 1 url
+        const generation3 = res.data.data[2].url; // TODO - add logic to support more than 1 url
+        const generation4 = res.data.data[3].url; // TODO - add logic to support more than 1 url
+        console.log('jeremiah');
+        console.log('generation1');
+        console.log(generation1);
+        console.log('generation2');
+        console.log(generation2);
+        console.log('generation3');
+        console.log(generation3);
+        console.log('generation4');
+        console.log(generation4);
 
         // https://slack.dev/bolt-js/concepts#message-sending with blocks via .say() as method from Slack's Bolt framework
         await say({
@@ -86,17 +101,47 @@ app.command('/openai-dalle2', async ({ command, ack, payload, context, respond, 
                     "type": "section",
                     "text": {
                         "type": "mrkdwn",
+                        // "text": "This is a mrkdwn section block :ghost: *this is bold*, and ~this is crossed out~, and <https://google.com|this is a link>"
                         "text": ":art: Powered by <https://openai.com/dall-e-2/|DALL-E2> :art:"
                     }
                 },
                 {
+                    "type": "section",
+                    "text": {
+                        "type": "mrkdwn",
+                        // "text": "This is a mrkdwn section block :ghost: *this is bold*, and ~this is crossed out~, and <https://google.com|this is a link>"
+                        "text": `_${prompt}_`
+                    }
+                },
+                {
+                    "type": "divider"
+                },
+                {
                     "type": "image",
-                    "title": {
-                        "type": "plain_text",
-                        "text": "An Impressionist oil painting of someone riding on a psychedelic train going through a tunnel on a mountainside in a desert filled with wildflowers and cacti. There is a hawk flying in the sky and there is an orange sun in the sky at sunset.",
-                        "emoji": true
-                    },
-                    "image_url": generation, // Slack API requires file size < 2 MB in size + public url
+                    // "image_url": "https://i1.wp.com/thetempest.co/wp-content/uploads/2017/08/The-wise-words-of-Michael-Scott-Imgur-2.jpg?w=1024&ssl=1",
+                    "image_url": `${generation1}`,
+                    // "alt_text": "inspiration"
+                    "alt_text": "Image generated via DALL-E2 API from OpenAI"
+                },
+                {
+                    "type": "image",
+                    // "image_url": "https://i1.wp.com/thetempest.co/wp-content/uploads/2017/08/The-wise-words-of-Michael-Scott-Imgur-2.jpg?w=1024&ssl=1",
+                    "image_url": `${generation2}`,
+                    // "alt_text": "inspiration"
+                    "alt_text": "Image generated via DALL-E2 API from OpenAI"
+                },
+                {
+                    "type": "image",
+                    // "image_url": "https://i1.wp.com/thetempest.co/wp-content/uploads/2017/08/The-wise-words-of-Michael-Scott-Imgur-2.jpg?w=1024&ssl=1",
+                    "image_url": `${generation3}`,
+                    // "alt_text": "inspiration"
+                    "alt_text": "Image generated via DALL-E2 API from OpenAI"
+                },
+                {
+                    "type": "image",
+                    // "image_url": "https://i1.wp.com/thetempest.co/wp-content/uploads/2017/08/The-wise-words-of-Michael-Scott-Imgur-2.jpg?w=1024&ssl=1",
+                    "image_url": `${generation4}`,
+                    // "alt_text": "inspiration"
                     "alt_text": "Image generated via DALL-E2 API from OpenAI"
                 }
             ]
